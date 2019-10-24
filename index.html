@@ -13,7 +13,85 @@
   <body>
     <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
-    <div class="container">
+    <div class="container-fluid">
+        <div class="row"><h1 class="text-center">Math Quiz</h1></div>
+        <div class="row"><hr></div>
+        <div class="row" id="question">
+            <div class="col-md-2 btn btn-link" id="prev">
+                <div class="num">&lt;&lt;</div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1">
+                <div class="num" id="fn">3</div>
+            </div>
+            <div class="col-md-1">
+                <div class="op" id="op">+</div>
+            </div>
+            <div class="col-md-1">
+                <div class="num" id="sn">4</div>
+            </div>
+            <div class="col-md-1">
+                <div class="op" id="op">=</div>
+            </div>
+            <div class="col-md-2">
+                <div class="num" id="ret">?</div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-2 btn btn-link" id="next">
+                <div class="num">&gt;&gt;</div>
+            </div>
+        </div>
+        <div class="row"><hr></div>
+        <div class="row" id="keypad">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 btn btn-default ky" id="k1">
+                        <div class="num">1</div>
+                    </div>
+                    <div class="col-md-4 btn btn-default ky" id="k2">
+                        <div class="num">2</div>
+                    </div>
+                    <div class="col-md-4 btn btn-default ky" id="k3">
+                        <div class="num">3</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 btn btn-default ky" id="k4">
+                        <div class="num">4</div>
+                    </div>
+                    <div class="col-md-4 btn btn-default ky" id="k5">
+                        <div class="num">5</div>
+                    </div>
+                    <div class="col-md-4 btn btn-default ky" id="k6">
+                        <div class="num">6</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 btn btn-default ky" id="k7">
+                        <div class="num">7</div>
+                    </div>
+                    <div class="col-md-4 btn btn-default ky" id="k8">
+                        <div class="num">8</div>
+                    </div>
+                    <div class="col-md-4 btn btn-default ky" id="k9">
+                        <div class="num">9</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 btn btn-default ky" id="k0">
+                        <div class="num">0</div>
+                    </div>
+                    <div class="col-md-4 btn btn-default ky" id="k10">
+                        <div class="num">X</div>
+                    </div>
+                    <div class="col-md-4 btn btn-default ky" id="k11">
+                        <div class="num">确定</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
     </div>
     <script>
         const shuffle = ([...arr]) => {
@@ -59,5 +137,18 @@
         //console.log(make_quiz(10, 30, "mix"));
 
     </script>
+    <style>
+        .num {
+            font-size: 120px;
+            text-align: center;
+        }
+        .op {
+            font-size: 100px;
+            text-align: center;
+        }
+        .ky .num {
+            font-size: 64px;
+        }
+    </style>
   </body>
 </html>
