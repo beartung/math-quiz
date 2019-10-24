@@ -160,11 +160,6 @@
             $("#ret").attr("value", q[3]);
         };
 
-        $(".next").bind("click", function() {
-        });
-
-        $(".prev").bind("click", function() {
-        });
 
         $(".ky").bind("click", function() {
             var k = this.id.replace("k","");
@@ -183,9 +178,30 @@
             }
         });
         $(function(){
-            quiz = make_quiz(10, 5, "add");
+            n = 10;
+            quiz_type = "add";
+            count = 5;
+            quiz = make_quiz(n, count, quiz_type);
             index = 0;
             set_question(quiz, index);
+            $("#next").bind("click", function() {
+                if (index < count-1) {
+                    index++;
+                    set_question(quiz, index);
+                } else {
+                    index = count-1;
+                }
+            });
+
+            $("#prev").bind("click", function() {
+                if (index > 0) {
+                    index--;
+                    set_question(quiz, index);
+                } else {
+                    index = 0;
+                }
+            });
+
         });
 
     </script>
