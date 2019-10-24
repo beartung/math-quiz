@@ -136,6 +136,36 @@
         //console.log(make_quiz(10, 30, "minus"));
         //console.log(make_quiz(10, 30, "mix"));
 
+        function set_question(quiz, index) {
+            console.log(quiz);
+            var q = quiz[index];
+            var op = "";
+            switch (q[0]) {
+                case 0:
+                    op = "+";
+                    break;
+                case 1:
+                    op = "-";
+                    break;
+                case 2:
+                    op = "×";
+                    break;
+                case 3:
+                    op = "÷";
+                    break;
+            }
+            $("#op").html(op);
+            $("#fn").html(q[1]);
+            $("#sn").html(q[2]);
+            $("#ret").attr("value", q[3]);
+        };
+
+        $(".next").bind("click", function() {
+        });
+
+        $(".prev").bind("click", function() {
+        });
+
         $(".ky").bind("click", function() {
             var k = this.id.replace("k","");
             var answer =  $("#ret").html();
@@ -151,6 +181,11 @@
                     alert("Oops, 你答错了！");
                 }
             }
+        });
+        $(function(){
+            quiz = make_quiz(10, 5, "add");
+            index = 0;
+            set_question(quiz, index);
         });
 
     </script>
