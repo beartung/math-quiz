@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Math Quiz</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <div class="container">
+    </div>
+    <script>
+        const shuffle = ([...arr]) => {
+            let m = arr.length;
+            while (m) {
+                const i = Math.floor(Math.random() * m--);
+                [arr[m], arr[i]] = [arr[i], arr[m]];
+            }
+            return arr;
+        };
+
+        function decompose_num(n) {
+            var ret_add = [];
+            var ret_minus = [];
+            for (i = 0; i < n; i++) {
+                ret_add.push([0, i, n-i, n]);
+                ret_minus.push([1, n, n-i, i]);
+            }
+            return [ret_add, ret_minus];
+        };
+
+        function make_quiz(sum, count, type) {
+            var ret = [];
+            var ret_add = [];
+            var ret_minus = [];
+            for (i = 3; i <= sum; i++) {
+                var r = decompose_num(i);
+                ret_add = ret_add.concat(r[0]);
+                ret_minus = ret_minus.concat(r[1]);
+            }
+            if (type == "add") {
+                ret = shuffle(ret_add).slice(0, count);
+            } else if (type == "minus") {
+                ret = shuffle(ret_minus).slice(0, count);
+            } else if (type == "mix") {
+                ret = shuffle(ret_add.concat(ret_minus)).slice(0, count);
+            }
+            return shuffle(ret);
+        };
+
+        //console.log(make_quiz(10, 30, "add"));
+        //console.log(make_quiz(10, 30, "minus"));
+        //console.log(make_quiz(10, 30, "mix"));
+
+    </script>
+  </body>
+</html>
