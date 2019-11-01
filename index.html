@@ -59,6 +59,7 @@
                         </label>
                     </div>
                     <hr/>
+                    <!--
                     <div class="form-group">
                         <label for="inputEmail3" class="col-sm-3 control-label">计时类型</label>
                         <label class="radio-inline">
@@ -71,6 +72,7 @@
                             <input type="radio" name="quiz-time" value="0"> 普通计时
                         </label>
                     </div>
+                    -->
                     <hr/>
                     <div class="form-group">
                         <button id="btn-start" type="button" class="btn btn-default submit">生成试卷，开始答题</button>
@@ -251,7 +253,7 @@
             MAX = 10;
             TYPE = "add";
             COUNT = 10;
-            TIME = 180;
+            //TIME = 180;
             SETUP = false;
             RIGHT = 0;
 
@@ -262,7 +264,7 @@
                 $("input:radio[name=quiz-count][value=" + COUNT + "]").attr("checked",true);
                 $("input:radio[name=quiz-type][value=" + TYPE + "]").attr("checked",true);
                 $("input:radio[name=quiz-max][value=" + MAX + "]").attr("checked",true);
-                $("input:radio[name=quiz-time][value=" + TIME + "]").attr("checked",true);
+                //$("input:radio[name=quiz-time][value=" + TIME + "]").attr("checked",true);
             }
 
             function save_setting() {
@@ -270,7 +272,7 @@
                     "max": MAX,
                     "type": TYPE,
                     "count": COUNT,
-                    "time": TIME,
+                    //"time": TIME,
                     "setup": true
                 };
                 Cookies.set("quiz", JSON.stringify(value), { expires: 365 });
@@ -283,7 +285,7 @@
                 MAX = value.max;
                 TYPE = value.type;
                 COUNT = value.count;
-                TIME = value.time;
+                //TIME = value.time;
                 SETUP = true;
             } else {
                  save_setting();
@@ -367,9 +369,11 @@
                 MAX = parseInt($("input[name='quiz-max']:checked").val());
                 TYPE = $("input[name='quiz-type']:checked").val();
                 COUNT = parseInt($("input[name='quiz-count']:checked").val());
-                TIME = parseInt($("input[name='quiz-time']:checked").val());
+                //TIME = parseInt($("input[name='quiz-time']:checked").val());
 
-                console.log("max=" + MAX + " type=" + TYPE + " count=" + COUNT + " time=" + TIME);
+                console.log("max=" + MAX + " type=" + TYPE + " count=" + COUNT);
+                //console.log("max=" + MAX + " type=" + TYPE + " count=" + COUNT + " time=" + TIME);
+
                 save_setting();
                 start_quiz();
             });
