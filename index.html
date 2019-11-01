@@ -72,8 +72,8 @@
                             <input type="radio" name="quiz-time" value="0"> 普通计时
                         </label>
                     </div>
-                    -->
                     <hr/>
+                    -->
                     <div class="form-group">
                         <button id="btn-start" type="button" class="btn btn-default submit">生成试卷，开始答题</button>
                     </div>
@@ -152,14 +152,15 @@
             <span class="nav btn btn-link" id="prev">&lt;&nbsp;&lt;</span>
             <span class="nav btn btn-primary" id="answer">确定</span>
             <span class="nav btn btn-link" id="next">&gt;&nbsp;&gt;</span>
+            </div>
             <div class="col-md-3"></div>
         </div>
         <div class="row"><hr/></div>
         <div class="row text-center">
+            <input id="seconds-count" value="0" type="hidden"/>
             <div class="col-md-3"></div>
             <div id="clock" class="col-md-6">
-                <input id="seconds-count" value="0" type="hidden"/>
-                用时
+                用时&nbsp;&nbsp;
                 <span class="btn btn-default" id="minutes"></span>
                 <span class="btn btn-default" id="seconds"></span>
             </div>
