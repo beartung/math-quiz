@@ -81,6 +81,7 @@
         </div>
     </div>
     <div class="container" id="quiz-box">
+        <button id="btn-setting" class="btn btn-default btn-large">设置</button>
         <div class="row text-center" id="question">
             <div class="col-md-3"></div>
             <div class="col-md-6">
@@ -304,6 +305,11 @@
                 $("#settings").show();
                 $("#quiz-box").hide();
             }
+
+            $("#btn-setting").bind("click", function() {
+                $("#settings").show();
+                $("#quiz-box").hide();
+            });
 
         });
 
