@@ -81,7 +81,7 @@
         </div>
     </div>
     <div class="container" id="quiz-box">
-        <button id="btn-setting" class="btn btn-default btn-large">设置</button>
+        <button id="btn-setting" class="btn btn-primary">设置</button>
         <div class="row text-center" id="index-tip">第1题/共10题</div>
         <div class="row"><hr/></div>
         <div class="row text-center" id="question">
@@ -246,7 +246,18 @@
             quiz = null;
             index = 0;
 
-            /*
+            function save_setting() {
+                value = {
+                    "max": MAX,
+                    "type": TYPE,
+                    "count": COUNT,
+                    "time": TIME,
+                    "setup": true
+                };
+                Cookies.set("quiz", JSON.stringify(value), { expires: 365 });
+            }
+
+
             cookie = Cookies.get("quiz");
             if (cookie != null) {
                 value = JSON.parse(cookie);
@@ -256,19 +267,11 @@
                 TIME = value.time;
                 SETUP = true;
             } else {
-                value = {
-                    "max": MAX,
-                    "type": TYPE,
-                    "count": COUNT,
-                    "time": TIME,
-                    "setup": true
-                };
-                Cookies.set("quiz", JSON.stringify(value), { expires: 365 });
+                 save_setting();
             };
-            */
 
             function update_index_tip() {
-                $("#index-tip").html("第" + (index+1) + "题，共"+ COUNT + "题");
+                $("#index-tip").html("第" + (index+1) + "题&nbsp;/&nbsp;共"+ COUNT + "题");
             }
 
             function next_question() {
@@ -343,6 +346,7 @@
                 TIME = parseInt($("input[name='quiz-time']:checked").val());
 
                 console.log("max=" + MAX + " type=" + TYPE + " count=" + COUNT + " time=" + TIME);
+                save_setting();
                 start_quiz();
             });
 
@@ -352,7 +356,6 @@
                     RIGHT++;
                     //alert("你答对了！");
                 } else {
-                    
                     //alert("Oops, 你答错了！");
                 }
                 next_question();
@@ -372,7 +375,7 @@
             padding: 10px;
         }
         .ky .num {
-            font-size: 48px;
+            font-size: 44px;
         }
         .fl {
             float: left;
@@ -383,14 +386,13 @@
         .btn .num {
             padding-left: 20px;
             padding-right: 20px;
-            margin-top: 2px;
+            margin: 1px;
         }
         .nav {
-            font-size: 42px;
-            padding-left: 40px;
-            padding-right: 40px;
+            font-size: 32px;
+            padding-left: 36px;
+            padding-right: 36px;
         }
-        
         .submit {
             font-size: 24px;
         }
@@ -399,6 +401,13 @@
         }
         .hh {
             display: none;
+        }
+        #btn-setting {
+            margin-top:20px;
+            font-size: 18px;
+        }
+        #keypad .row {
+            margin-top:2px;
         }
     </style>
   </body>
