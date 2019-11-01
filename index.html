@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
-    <div class="container" id="setting">
+    <div class="container" id="settings">
         <div class="row text-center">
             <div class="col-md-3"></div>
             <div class="col-md-6">
@@ -239,76 +239,70 @@
             }
         });
 
-        function get_cookie(name) {
-            var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-            if(arr=document.cookie.match(reg)) {
-                return unescape(arr[2]);
-            } else {
-                return null;
-            }
-        }
-
-        function set_cookie(name, value, time) {
-            var strsec = getsec(time);
-            var exp = new Date();
-            exp.setTime(exp.getTime() + strsec*1);
-            document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
-        }
-
-        function getsec(str) {
-            //alert(str);
-            var str1=str.substring(1,str.length)*1;
-            var str2=str.substring(0,1);
-            if (str2=="s") {
-                return str1*1000;
-            } else if (str2=="h") {
-                return str1*60*60*1000;
-            } else if (str2=="d") {
-                return str1*24*60*60*1000;
-            }
-        }
-
         $(function(){
 
             MAX = 10;
             TYPE = "add";
             COUNT = 30;
             TIME = 180;
+            SETUP = false;
+
+            quiz = null;
+            index = 0;
 
             cookie = Cookies.get("quiz");
-            if (cookie) {
-                MAX = cookie.get("max");
-                TYPE = cookie.get("type");
-                COUNT = cookie.get("count");
-                TIME = cookie.get("time");
+            if (cookie != null) {
+                value = JSON.parse(cookie);
+                MAX = value.max;
+                TYPE = value.type;
+                COUNT = value.count;
+                TIME = value.time;
+                SETUP = true;
             } else {
-                Cookies.set("quiz", "value", { expires: 365 });
+                value = {
+                    "max": MAX,
+                    "type": TYPE,
+                    "count": COUNT,
+                    "time": TIME,
+                    "setup": true
+                };
+                Cookies.set("quiz", JSON.stringify(value), { expires: 365 });
+            };
+
+
+            function start_quiz() {
+                $("#settings").hide();
+                $("#quiz-box").show();
+
+                quiz = make_quiz(MAX, COUNT, TYPE);
+                index = 0;
+                set_question(quiz, index);
+
+                $("#next").bind("click", function() {
+                    if (index < COUNT-1) {
+                        index++;
+                        set_question(quiz, index);
+                    } else {
+                        index = COUNT-1;
+                    }
+                });
+
+                $("#prev").bind("click", function() {
+                    if (index > 0) {
+                        index--;
+                        set_question(quiz, index);
+                    } else {
+                        index = 0;
+                    }
+                });
+            };
+
+            if (SETUP) {
+                start_quiz()
+            } else {
+                $("#settings").show();
+                $("#quiz-box").hide();
             }
-
-            n = 10;
-            quiz_type = "add";
-            count = 5;
-
-            quiz = make_quiz(n, count, quiz_type);
-            index = 0;
-            set_question(quiz, index);
-            $("#next").bind("click", function() {
-                if (index < count-1) {
-                    index++;
-                    set_question(quiz, index);
-                } else {
-                    index = count-1;
-                }
-            });
-
-            $("#prev").bind("click", function() {
-                if (index > 0) {
-                    index--;
-                    set_question(quiz, index);
-                } else {
-                    index = 0;
-                }
-            });
 
         });
 
