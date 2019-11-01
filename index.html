@@ -342,7 +342,7 @@
                 var minutes = parseInt(seconds/60);
                 var r = window.confirm("你答对了" + RIGHT + "题，共" + COUNT + "题！"
                         + "\n用时" + minutes + "分" + (seconds % 60) + "秒"
-                        "\n点击『确认』再次测验，点击『取消』停止测验。");
+                        + "\n点击『确认』再次测验，点击『取消』停止测验。");
                 if (r) {
                     start_quiz();
                 } else {
