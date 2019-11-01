@@ -73,7 +73,7 @@
                     </div>
                     <hr/>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-default submit">生成试卷，开始答题</button>
+                        <button id="btn-start" type="button" class="btn btn-default submit">生成试卷，开始答题</button>
                     </div>
                 </form>
             </div>
@@ -82,6 +82,8 @@
     </div>
     <div class="container" id="quiz-box">
         <button id="btn-setting" class="btn btn-default btn-large">设置</button>
+        <div class="row text-center" id="index-tip">第1题/共10题</div>
+        <div class="row"><hr/></div>
         <div class="row text-center" id="question">
             <div class="col-md-3"></div>
             <div class="col-md-6">
@@ -232,26 +234,19 @@
             }
         });
 
-        $("#answer").bind("click", function() {
-            var answer =  $("#ret").html();
-            if ($("#ret").attr("value") == answer) {
-                alert("你答对了！");
-            } else {
-                alert("Oops, 你答错了！");
-            }
-        });
-
         $(function(){
 
             MAX = 10;
             TYPE = "add";
-            COUNT = 30;
+            COUNT = 10;
             TIME = 180;
             SETUP = false;
+            RIGHT = 0;
 
             quiz = null;
             index = 0;
 
+            /*
             cookie = Cookies.get("quiz");
             if (cookie != null) {
                 value = JSON.parse(cookie);
@@ -270,37 +265,65 @@
                 };
                 Cookies.set("quiz", JSON.stringify(value), { expires: 365 });
             };
+            */
 
+            function update_index_tip() {
+                $("#index-tip").html("第" + (index+1) + "题，共"+ COUNT + "题");
+            }
+
+            function next_question() {
+                if (index < COUNT-1) {
+                    index++;
+                    update_index_tip();
+                    set_question(quiz, index);
+                } else {
+                    index = COUNT-1;
+                    update_index_tip();
+                    end_quiz();
+                }
+            };
+
+            function prev_question() {
+                if (index > 0) {
+                    index--;
+                    update_index_tip();
+                    set_question(quiz, index);
+                } else {
+                    index = 0;
+                    update_index_tip();
+                }
+            };
 
             function start_quiz() {
-                //$("#settings").hide();
-                //$("#quiz-box").show();
+                $("#settings").hide();
+                $("#quiz-box").show();
 
                 quiz = make_quiz(MAX, COUNT, TYPE);
                 index = 0;
                 set_question(quiz, index);
+                update_index_tip();
 
                 $("#next").bind("click", function() {
-                    if (index < COUNT-1) {
-                        index++;
-                        set_question(quiz, index);
-                    } else {
-                        index = COUNT-1;
-                    }
+                    next_question();
                 });
 
                 $("#prev").bind("click", function() {
-                    if (index > 0) {
-                        index--;
-                        set_question(quiz, index);
-                    } else {
-                        index = 0;
-                    }
+                    prev_question();
                 });
             };
 
+            function end_quiz() {
+                var r = window.confirm("你答对了" + RIGHT + "题，共" + COUNT + "题！\n点击『确认』再次测验，点击『取消』停止测验。");
+                if (r) {
+                    start_quiz();
+                } else {
+                    $("#settings").show();
+                    $("#quiz-box").hide();
+                }
+            }
+
             if (SETUP) {
-                start_quiz()
+                start_quiz();
             } else {
                 $("#settings").show();
                 $("#quiz-box").hide();
@@ -309,6 +332,30 @@
             $("#btn-setting").bind("click", function() {
                 $("#settings").show();
                 $("#quiz-box").hide();
+            });
+
+            $("#btn-start").bind("click", function() {
+                $("#settings").hide();
+                $("#quiz-box").show();
+                MAX = parseInt($("input[name='quiz-max']:checked").val());
+                TYPE = $("input[name='quiz-type']:checked").val();
+                COUNT = parseInt($("input[name='quiz-count']:checked").val());
+                TIME = parseInt($("input[name='quiz-time']:checked").val());
+
+                console.log("max=" + MAX + " type=" + TYPE + " count=" + COUNT + " time=" + TIME);
+                start_quiz();
+            });
+
+            $("#answer").bind("click", function() {
+                var answer =  $("#ret").html();
+                if ($("#ret").attr("value") == answer) {
+                    RIGHT++;
+                    //alert("你答对了！");
+                } else {
+                    
+                    //alert("Oops, 你答错了！");
+                }
+                next_question();
             });
 
         });
