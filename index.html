@@ -152,6 +152,18 @@
             <span class="nav btn btn-link" id="next">&gt;&nbsp;&gt;</span>
             <div class="col-md-3"></div>
         </div>
+        <div class="row"><hr/></div>
+        <div class="row text-center">
+            <div class="col-md-3"></div>
+            <div id="clock" class="col-md-6">
+                <input id="seconds-count" value="0" type="hidden"/>
+                用时
+                <span class="btn btn-default" id="minutes"></span>
+                <span class="btn btn-default" id="seconds"></span>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row"><hr/></div>
     </div>
     <script>
         const shuffle = ([...arr]) => {
@@ -324,7 +336,11 @@
             };
 
             function end_quiz() {
-                var r = window.confirm("你答对了" + RIGHT + "题，共" + COUNT + "题！\n点击『确认』再次测验，点击『取消』停止测验。");
+                var seconds = parseInt($("#seconds-count").val());
+                var minutes = parseInt(seconds/60);
+                var r = window.confirm("你答对了" + RIGHT + "题，共" + COUNT + "题！"
+                        + "\n用时" + minutes + "分" + (seconds % 60) + "秒"
+                        "\n点击『确认』再次测验，点击『取消』停止测验。");
                 if (r) {
                     start_quiz();
                 } else {
@@ -368,6 +384,17 @@
                 }
                 next_question();
             });
+
+            function update(){
+                var seconds = parseInt($("#seconds-count").val());
+                seconds++;
+                $("#seconds-count").attr("value", seconds);
+                $("#minutes").text( parseInt(seconds / 60));
+                $("#seconds").text(seconds % 60);
+            }
+
+            update();
+            window.setInterval(update, 1000);
 
         });
 
@@ -416,6 +443,9 @@
         }
         #keypad .row {
             margin-top:2px;
+        }
+        #clock .btn {
+            width:40px;
         }
     </style>
   </body>
