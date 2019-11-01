@@ -29,7 +29,7 @@
                             <input type="radio" name="quiz-count" value="20"> 20
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="quiz-count" value="30" checked> 30
+                            <input type="radio" name="quiz-count" value="30"> 30
                         </label>
                     </div>
                     <hr/>
@@ -42,14 +42,14 @@
                             <input type="radio" name="quiz-type" value="minus"> 减法
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="quiz-type" value="mix" checked> 加减法
+                            <input type="radio" name="quiz-type" value="mix"> 加减法
                         </label>
                     </div>
                     <hr/>
                     <div class="form-group">
                         <label for="inputEmail3" class="col-sm-3 control-label">题目范围</label>
                         <label class="radio-inline">
-                            <input type="radio" name="quiz-max" value="10" checked> 10以内
+                            <input type="radio" name="quiz-max" value="10"> 10以内
                         </label>
                         <label class="radio-inline">
                             <input type="radio" name="quiz-max" value="20"> 20以内
@@ -62,7 +62,7 @@
                     <div class="form-group">
                         <label for="inputEmail3" class="col-sm-3 control-label">计时类型</label>
                         <label class="radio-inline">
-                            <input type="radio" name="quiz-time" value="180" checked> 倒计时3分钟
+                            <input type="radio" name="quiz-time" value="180"> 倒计时3分钟
                         </label>
                         <label class="radio-inline">
                             <input type="radio" name="quiz-time" value="60"> 倒计时1分钟
@@ -246,6 +246,13 @@
             quiz = null;
             index = 0;
 
+            function init_setting() {
+                $("input:radio[name=quiz-count][value=" + COUNT + "]").attr("checked",true);
+                $("input:radio[name=quiz-type][value=" + TYPE + "]").attr("checked",true);
+                $("input:radio[name=quiz-max][value=" + MAX + "]").attr("checked",true);
+                $("input:radio[name=quiz-time][value=" + TIME + "]").attr("checked",true);
+            }
+
             function save_setting() {
                 value = {
                     "max": MAX,
@@ -269,6 +276,7 @@
             } else {
                  save_setting();
             };
+            init_setting();
 
             function update_index_tip() {
                 $("#index-tip").html("第" + (index+1) + "题&nbsp;/&nbsp;共"+ COUNT + "题");
