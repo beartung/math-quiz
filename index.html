@@ -84,7 +84,11 @@
     </div>
     <div class="container" id="quiz-box">
         <button id="btn-setting" class="btn btn-primary">设置</button>
-        <div class="row text-center" id="index-tip">第1题/共10题</div>
+        <div class="row text-center">
+            <input id="seconds-count" value="0" type="hidden"/>
+            <span id="index-tip">第1题&nbsp;/&nbsp;共10题</span>
+            <span id="seconds">/&nbsp;用时0秒</span>
+        </div>
         <div class="row"><hr/></div>
         <div class="row text-center" id="question">
             <div class="col-md-3"></div>
@@ -152,17 +156,6 @@
             <span class="nav btn btn-link" id="prev">&lt;&nbsp;&lt;</span>
             <span class="nav btn btn-primary" id="answer">确定</span>
             <span class="nav btn btn-link" id="next">&gt;&nbsp;&gt;</span>
-            </div>
-            <div class="col-md-3"></div>
-        </div>
-        <div class="row"><hr/></div>
-        <div class="row text-center">
-            <input id="seconds-count" value="0" type="hidden"/>
-            <div class="col-md-3"></div>
-            <div id="clock" class="col-md-6">
-                用时&nbsp;&nbsp;
-                <span class="btn btn-default" id="minutes"></span>
-                <span class="btn btn-default" id="seconds"></span>
             </div>
             <div class="col-md-3"></div>
         </div>
@@ -336,6 +329,8 @@
                 $("#prev").bind("click", function() {
                     prev_question();
                 });
+                $("#seconds-count").attr("value", 0);
+                window.setInterval(update, 1000);
             };
 
             function end_quiz() {
@@ -394,12 +389,13 @@
                 var seconds = parseInt($("#seconds-count").val());
                 seconds++;
                 $("#seconds-count").attr("value", seconds);
-                $("#minutes").text( parseInt(seconds / 60));
-                $("#seconds").text(seconds % 60);
+                if (seconds < 60) {
+                    $("#seconds").text("/ 用时" + seconds + "秒");
+                } else {
+                    var minutes = parseInt(seconds/60);
+                    $("#seconds").text("/ 用时" + minutes + "分" + (seconds % 60) + "秒");
+                }
             }
-
-            update();
-            window.setInterval(update, 1000);
 
         });
 
