@@ -284,6 +284,7 @@
             index = 0;
             result = {};
             errors = [];
+            interval = null;
 
             function init_setting() {
                 $("input:radio[name=quiz-count][value=" + COUNT + "]").attr("checked",true);
@@ -368,10 +369,13 @@
                     prev_question();
                 });
                 $("#seconds-count").attr("value", 0);
-                window.setInterval(update, 1000);
+                interval = window.setInterval(update, 1000);
             };
 
             function end_quiz() {
+
+                if (interval) clearInterval(interval);
+
                 var seconds = parseInt($("#seconds-count").val());
                 var minutes = parseInt(seconds/60);
 
