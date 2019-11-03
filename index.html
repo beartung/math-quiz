@@ -85,7 +85,7 @@
     <div class="container" id="quiz-box">
         <div class="row text-center" id="nav-bar">
             <button id="btn-setting" class="nav-btn btn btn-primary">设置</button>
-            <button class="nav-btn btn btn-danger" id="answer">交卷</button>
+            <button id="btn-submit" class="nav-btn btn btn-danger">交卷</button>
             <input id="seconds-count" value="0" type="hidden"/>
             <div id="nav-tip">
                 <span id="index-tip">第1题&nbsp;/&nbsp;共10题</span>
@@ -230,7 +230,12 @@
             $("#fn").html(q[1]);
             $("#sn").html(q[2]);
             $("#ret").attr("value", q[3]);
-            $("#ret").html("?");
+            var aw = result[index]
+            if (aw) {
+                $("#ret").html(aw);
+            } else {
+                $("#ret").html("?");
+            }
         };
 
         $(".ky").bind("click", function() {
@@ -257,6 +262,8 @@
 
             quiz = null;
             index = 0;
+            result = {};
+            errors = [];
 
             function init_setting() {
                 $("input:radio[name=quiz-count][value=" + COUNT + "]").attr("checked",true);
@@ -294,7 +301,14 @@
                 $("#index-tip").html("第" + (index+1) + "题&nbsp;/&nbsp;共"+ COUNT + "题");
             }
 
+            function save_result() {
+                if (index >= 0 && index < COUNT) {
+                    result[index] =  $("#ret").html();
+                }
+            }
+
             function next_question() {
+                save_result();
                 if (index < COUNT-1) {
                     index++;
                     update_index_tip();
@@ -302,11 +316,11 @@
                 } else {
                     index = COUNT-1;
                     update_index_tip();
-                    end_quiz();
                 }
             };
 
             function prev_question() {
+                save_result();
                 if (index > 0) {
                     index--;
                     update_index_tip();
@@ -378,15 +392,21 @@
                 start_quiz();
             });
 
-            $("#answer").bind("click", function() {
-                var answer =  $("#ret").html();
-                if ($("#ret").attr("value") == answer) {
-                    RIGHT++;
-                    //alert("你答对了！");
-                } else {
-                    //alert("Oops, 你答错了！");
+            $("#btn-submit").bind("click", function() {
+                var r = window.confirm("确定要提交答案吗？");
+                if (r) {
+                    for (i = 0; i < COUNT; i++) {
+                        var q = quiz[i];
+                        var aw = parseInt(result[i]);
+                        if (aw == q[3]) {
+                            RIGHT++;
+                        } else {
+                            q[3] = aw;
+                            errors.push(q);
+                        }
+                    }
+                    end_quiz();
                 }
-                next_question();
             });
 
             function update(){
@@ -420,7 +440,7 @@
         #btn-setting {
             float: left;
         }
-        #answer{
+        #btn-submit{
             float: right;
         }
         .btn .num {
