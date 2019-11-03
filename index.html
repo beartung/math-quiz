@@ -180,6 +180,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" id="btn-retry">再来一次</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="btn-error">错题测试</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal" id="btn-end">结束</button>
                 </div>
             </div><!-- /.modal-content -->
@@ -206,7 +207,7 @@
             return [ret_add, ret_minus];
         };
 
-        function make_quiz(sum, count, type) {
+        function make_quiz(sum, size, type) {
             var ret = [];
             var ret_add = [];
             var ret_minus = [];
@@ -216,11 +217,11 @@
                 ret_minus = ret_minus.concat(r[1]);
             }
             if (type == "add") {
-                ret = shuffle(ret_add).slice(0, count);
+                ret = shuffle(ret_add).slice(0, size);
             } else if (type == "minus") {
-                ret = shuffle(ret_minus).slice(0, count);
+                ret = shuffle(ret_minus).slice(0, size);
             } else if (type == "mix") {
-                ret = shuffle(ret_add.concat(ret_minus)).slice(0, count);
+                ret = shuffle(ret_add.concat(ret_minus)).slice(0, size);
             }
             return shuffle(ret);
         };
@@ -283,6 +284,7 @@
 
             quiz = null;
             index = 0;
+            count = COUNT;
             result = {};
             errors = [];
 
@@ -317,25 +319,26 @@
                  save_setting();
             };
             init_setting();
+            count = COUNT;
 
             function update_index_tip() {
-                $("#index-tip").html("第" + (index+1) + "题&nbsp;/&nbsp;共"+ COUNT + "题");
+                $("#index-tip").html("第" + (index+1) + "题&nbsp;/&nbsp;共"+ count + "题");
             }
 
             function save_result() {
-                if (index >= 0 && index < COUNT) {
+                if (index >= 0 && index < count) {
                     result[index] =  $("#ret").html();
                 }
             }
 
             function next_question() {
                 save_result();
-                if (index < COUNT-1) {
+                if (index < count - 1) {
                     index++;
                     update_index_tip();
                     set_question(quiz, index);
                 } else {
-                    index = COUNT-1;
+                    index = count - 1;
                     update_index_tip();
                 }
             };
@@ -352,12 +355,15 @@
                 }
             };
 
-            function start_quiz() {
+            function start_quiz(q) {
                 $("#settings").hide();
                 $("#quiz-box").show();
 
-                quiz = make_quiz(MAX, COUNT, TYPE);
+                quiz = q ? q : make_quiz(MAX, COUNT, TYPE);
                 index = 0;
+                count = quiz.length;
+                result = {};
+                errors = [];
                 set_question(quiz, index);
                 update_index_tip();
 
@@ -380,12 +386,12 @@
                       keyboard: false
                 })
 
-                var error_title = RIGHT < COUNT ? "错题列表如下：" : "";
+                var error_title = RIGHT < count ? "错题列表如下：" : "";
                 $('#result-summary').text("你答对了" + RIGHT + "题，共" + COUNT + "题！"
                         +"\n用时" + minutes + "分" + (seconds % 60) + "秒。" + error_title);
 
                 var eqs = "";
-                for (i = 0; i < COUNT; i++) {
+                for (i = 0; i < count; i++) {
                     var q = errors[i];
                     if (q) {
                         var op = "";
@@ -407,9 +413,19 @@
                     }
                 };
 
+                if (RIGHT < count) {
+                    $('#btn-error').show();
+                } else {
+                    $('#btn-error').hide();
+                };
+
                 $('#error-questions').html(eqs);
                 $('#btn-retry').bind('click', function() {
-                    start_quiz();
+                    start_quiz(null);
+                });
+
+                $('#btn-error').bind('click', function() {
+                    start_quiz(errors);
                 });
 
                 $('#btn-end').bind('click', function() {
@@ -443,14 +459,14 @@
                 //console.log("max=" + MAX + " type=" + TYPE + " count=" + COUNT + " time=" + TIME);
 
                 save_setting();
-                start_quiz();
+                start_quiz(null);
             });
 
             $("#btn-submit").bind("click", function() {
                 save_result();
                 var r = window.confirm("确定要提交答案吗？");
                 if (r) {
-                    for (i = 0; i < COUNT; i++) {
+                    for (i = 0; i < count; i++) {
                         var q = quiz[i];
                         var aw = result[i];
                         if (parseInt(aw) == q[3]) {
