@@ -369,12 +369,14 @@
                     prev_question();
                 });
                 $("#seconds-count").attr("value", 0);
+                if (interval) {
+                    window.clearInterval(interval);
+                    interval = null;
+                }
                 interval = window.setInterval(update, 1000);
             };
 
             function end_quiz() {
-
-                if (interval) clearInterval(interval);
 
                 var seconds = parseInt($("#seconds-count").val());
                 var minutes = parseInt(seconds/60);
