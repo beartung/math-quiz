@@ -367,6 +367,8 @@
                 errors = [];
                 set_question(quiz, index);
                 update_index_tip();
+                $("#next").removeClass("btn-danger")
+                $("#next").text("下一题");
 
                 $("#seconds-count").attr("value", 0);
                 if (interval) {
