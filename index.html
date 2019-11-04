@@ -232,12 +232,12 @@
             COUNT = 10;
             //TIME = 180;
             SETUP = false;
-            RIGHT = 0;
 
             quiz = null;
             index = 0;
             result = {};
             errors = [];
+            right_num = 0;
             interval = null;
 
             //settings
@@ -365,6 +365,7 @@
                 index = 0;
                 result = {};
                 errors = [];
+                right_num = 0;
                 set_question(quiz, index);
                 update_index_tip();
                 $("#next").removeClass("btn-danger")
@@ -387,8 +388,8 @@
                       keyboard: false
                 })
 
-                var error_title = RIGHT < COUNT ? "错题列表如下：" : "";
-                $('#result-summary').text("你答对了" + RIGHT + "题，共" + COUNT + "题！"
+                var error_title = right_num < COUNT ? "错题列表如下：" : "";
+                $('#result-summary').text("你答对了" + right_num + "题，共" + COUNT + "题！"
                         +"\n用时" + minutes + "分" + (seconds % 60) + "秒。" + error_title);
 
                 var eqs = "";
@@ -434,7 +435,7 @@
                         var q = quiz[i];
                         var aw = result[i];
                         if (parseInt(aw) == q[3]) {
-                            RIGHT++;
+                            right_num++;
                         } else {
                             q[3] = aw;
                             errors.push(q);
