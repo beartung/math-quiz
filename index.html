@@ -224,55 +224,9 @@
             return shuffle(ret);
         };
 
-        //console.log(make_quiz(10, 30, "add"));
-        //console.log(make_quiz(10, 30, "minus"));
-        //console.log(make_quiz(10, 30, "mix"));
-
-        function set_question(quiz, index) {
-            console.log(quiz);
-            var q = quiz[index];
-            var op = "";
-            switch (q[0]) {
-                case 0:
-                    op = "+";
-                    break;
-                case 1:
-                    op = "-";
-                    break;
-                case 2:
-                    op = "×";
-                    break;
-                case 3:
-                    op = "÷";
-                    break;
-            }
-            $("#op").html(op);
-            $("#fn").html(q[1]);
-            $("#sn").html(q[2]);
-            $("#ret").attr("value", q[3]);
-            var aw = result[index]
-            if (aw) {
-                $("#ret").html(aw);
-            } else {
-                $("#ret").html("?");
-            }
-        };
-
-        $(".ky").bind("click", function() {
-            var k = this.id.replace("k","");
-            var answer =  $("#ret").html();
-            if (answer == '?') answer = 0;
-            if (k < 10 && parseInt(answer) < 99) {
-                $("#ret").html(parseInt(answer + k));
-            } else if (k == 10) {
-                var new_value = answer.slice(0, -1);
-                if (new_value == '') new_value='?';
-                $("#ret").html(new_value);
-            }
-        });
-
         $(function(){
 
+            //vars
             MAX = 10;
             TYPE = "add";
             COUNT = 10;
@@ -286,7 +240,20 @@
             errors = [];
             interval = null;
 
+            //settings
             function init_setting() {
+                cookie = Cookies.get("quiz");
+                if (cookie != null) {
+                    value = JSON.parse(cookie);
+                    MAX = value.max;
+                    TYPE = value.type;
+                    COUNT = value.count;
+                    //TIME = value.time;
+                    SETUP = true;
+                } else {
+                     save_setting();
+                };
+     
                 $("input:radio[name=quiz-count][value=" + COUNT + "]").attr("checked",true);
                 $("input:radio[name=quiz-type][value=" + TYPE + "]").attr("checked",true);
                 $("input:radio[name=quiz-max][value=" + MAX + "]").attr("checked",true);
@@ -305,18 +272,36 @@
             }
 
 
-            cookie = Cookies.get("quiz");
-            if (cookie != null) {
-                value = JSON.parse(cookie);
-                MAX = value.max;
-                TYPE = value.type;
-                COUNT = value.count;
-                //TIME = value.time;
-                SETUP = true;
-            } else {
-                 save_setting();
+            //question
+            function set_question(quiz, index) {
+                console.log(quiz);
+                var q = quiz[index];
+                var op = "";
+                switch (q[0]) {
+                    case 0:
+                        op = "+";
+                        break;
+                    case 1:
+                        op = "-";
+                        break;
+                    case 2:
+                        op = "×";
+                        break;
+                    case 3:
+                        op = "÷";
+                        break;
+                }
+                $("#op").html(op);
+                $("#fn").html(q[1]);
+                $("#sn").html(q[2]);
+                $("#ret").attr("value", q[3]);
+                var aw = result[index]
+                if (aw) {
+                    $("#ret").html(aw);
+                } else {
+                    $("#ret").html("?");
+                }
             };
-            init_setting();
 
             function update_index_tip() {
                 $("#index-tip").html("第" + (index+1) + "题&nbsp;/&nbsp;共"+ COUNT + "题");
@@ -352,6 +337,19 @@
                 }
             };
 
+            //quiz
+            function update_status(){
+                var seconds = parseInt($("#seconds-count").val());
+                seconds++;
+                $("#seconds-count").attr("value", seconds);
+                if (seconds < 60) {
+                    $("#seconds").text("/ 用时" + seconds + "秒");
+                } else {
+                    var minutes = parseInt(seconds/60);
+                    $("#seconds").text("/ 用时" + minutes + "分" + (seconds % 60) + "秒");
+                }
+            }
+
             function start_quiz() {
                 $("#settings").hide();
                 $("#quiz-box").show();
@@ -361,19 +359,12 @@
                 set_question(quiz, index);
                 update_index_tip();
 
-                $("#next").bind("click", function() {
-                    next_question();
-                });
-
-                $("#prev").bind("click", function() {
-                    prev_question();
-                });
                 $("#seconds-count").attr("value", 0);
                 if (interval) {
                     window.clearInterval(interval);
                     interval = null;
                 }
-                interval = window.setInterval(update, 1000);
+                interval = window.setInterval(update_status, 1000);
             };
 
             function end_quiz() {
@@ -424,13 +415,7 @@
 
             }
 
-            if (SETUP) {
-                start_quiz();
-            } else {
-                $("#settings").show();
-                $("#quiz-box").hide();
-            }
-
+            //buttons
             $("#btn-setting").bind("click", function() {
                 $("#settings").show();
                 $("#quiz-box").hide();
@@ -469,19 +454,39 @@
                 }
             });
 
-            function update(){
-                var seconds = parseInt($("#seconds-count").val());
-                seconds++;
-                $("#seconds-count").attr("value", seconds);
-                if (seconds < 60) {
-                    $("#seconds").text("/ 用时" + seconds + "秒");
-                } else {
-                    var minutes = parseInt(seconds/60);
-                    $("#seconds").text("/ 用时" + minutes + "分" + (seconds % 60) + "秒");
+            $("#next").bind("click", function() {
+                next_question();
+            });
+
+            $("#prev").bind("click", function() {
+                prev_question();
+            });
+
+            $(".ky").bind("click", function() {
+                var k = this.id.replace("k","");
+                var answer =  $("#ret").html();
+                if (answer == '?') answer = 0;
+                if (k < 10 && parseInt(answer) < 99) {
+                    $("#ret").html(parseInt(answer + k));
+                } else if (k == 10) {
+                    var new_value = answer.slice(0, -1);
+                    if (new_value == '') new_value='?';
+                    $("#ret").html(new_value);
                 }
+            });
+
+            //main process
+            init_setting();
+            if (SETUP) {
+                start_quiz();
+            } else {
+                $("#settings").show();
+                $("#quiz-box").hide();
             }
 
         });
+
+
 
     </script>
     <style>
