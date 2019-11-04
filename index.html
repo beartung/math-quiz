@@ -253,25 +253,25 @@
             */
             switch (type) {
                 case "add":
-                    ret = ret_add.slice(0, count);
+                    ret = shuffle(ret_add).slice(0, count);
                     break;
                 case "minus":
-                    ret = ret_minus.slice(0, count);
+                    ret = shuffle(ret_minus).slice(0, count);
                     break;
                 case "add_minus":
-                    ret = ret_add.concat(ret_minus).slice(0, count);
+                    ret = shuffle(ret_add.concat(ret_minus)).slice(0, count);
                     break;
                 case "multiply":
-                    ret = ret_multiply.slice(0, count);
+                    ret = shuffle(ret_multiply).slice(0, count);
                     break;
                 case "divide":
-                    ret = ret_divide.slice(0, count);
+                    ret = shuffle(ret_divide).slice(0, count);
                     break;
                 case "multiply_divide":
-                    ret = ret_multiply.concat(ret_divide).slice(0, count);
+                    ret = shuffle(ret_multiply.concat(ret_divide)).slice(0, count);
                     break;
                 case "mix":
-                    ret = ret_add.concat(ret_minus).concat(ret_multiply).concat(ret_divide).slice(0, count);
+                    ret = shuffle(ret_add.concat(ret_minus).concat(ret_multiply).concat(ret_divide)).slice(0, count);
                     break;
             }
             return shuffle(ret);
