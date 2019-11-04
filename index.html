@@ -42,7 +42,19 @@
                             <input type="radio" name="quiz-type" value="minus"> 减法
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="quiz-type" value="mix"> 加减法
+                            <input type="radio" name="quiz-type" value="add_minus"> 加减法
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="quiz-type" value="multiply"> 乘法
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="quiz-type" value="divide"> 除法
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="quiz-type" value="multiply_divide"> 乘除法
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="quiz-type" value="mix"> 混合四则运算
                         </label>
                     </div>
                     <hr/>
@@ -205,21 +217,62 @@
             return [ret_add, ret_minus];
         };
 
+
+        function divide_num(n) {
+            var ret_multiply = [];
+            var ret_divide = [];
+            for (i = 0; i < Math.ceil(Math.sqrt(n)); i++) {
+                for (j = 0; j < Math.ceil(Math.sqrt(n)); j++) {
+                    ret_multiply.push([2, i, j, i*j]);
+                    ret_divide.push([3, i*j, j, i]);
+                }
+            }
+            return [ret_multiply, ret_divide];
+        }
+
         function make_quiz(sum, count, type) {
             var ret = [];
             var ret_add = [];
             var ret_minus = [];
-            for (i = 3; i <= sum; i++) {
+            var ret_multiply= [];
+            var ret_divide = [];
+            var i = 0;
+            for (i = 2; i <= sum; i++) {
                 var r = decompose_num(i);
                 ret_add = ret_add.concat(r[0]);
                 ret_minus = ret_minus.concat(r[1]);
+                var q = divide_num(i);
+                ret_multiply = ret_multiply.concat(q[0]);
+                ret_divide = ret_divide.concat(q[1]);
             }
-            if (type == "add") {
-                ret = shuffle(ret_add).slice(0, count);
-            } else if (type == "minus") {
-                ret = shuffle(ret_minus).slice(0, count);
-            } else if (type == "mix") {
-                ret = shuffle(ret_add.concat(ret_minus)).slice(0, count);
+            /*
+            console.log("+ ", ret_add);
+            console.log("- ", ret_minus);
+            console.log("x ", ret_multiply);
+            console.log("/ ", ret_divide);
+            */
+            switch (type) {
+                case "add":
+                    ret = ret_add.slice(0, count);
+                    break;
+                case "minus":
+                    ret = ret_minus.slice(0, count);
+                    break;
+                case "add_minus":
+                    ret = ret_add.concat(ret_minus).slice(0, count);
+                    break;
+                case "multiply":
+                    ret = ret_multiply.slice(0, count);
+                    break;
+                case "divide":
+                    ret = ret_divide.slice(0, count);
+                    break;
+                case "multiply_divide":
+                    ret = ret_multiply.concat(ret_divide).slice(0, count);
+                    break;
+                case "mix":
+                    ret = ret_add.concat(ret_minus).concat(ret_multiply).concat(ret_divide).slice(0, count);
+                    break;
             }
             return shuffle(ret);
         };
@@ -507,11 +560,11 @@
     </script>
     <style>
         .num {
-            font-size: 76px;
+            font-size: 64px;
             text-align: center;
         }
         .op {
-            font-size: 76px;
+            font-size: 64px;
             text-align: center;
             padding: 10px;
         }
