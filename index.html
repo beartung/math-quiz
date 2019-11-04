@@ -319,6 +319,10 @@
                     index++;
                     update_index_tip();
                     set_question(quiz, index);
+                    if (index == COUNT - 1) {
+                        $("#next").addClass("btn-danger")
+                        $("#next").text("交　卷")
+                    }
                 } else {
                     index = COUNT-1;
                     update_index_tip();
@@ -336,6 +340,8 @@
                     index = 0;
                     update_index_tip();
                 }
+                $("#next").removeClass("btn-danger")
+                $("#next").text("下一题");
             };
 
             //quiz
