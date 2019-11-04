@@ -224,7 +224,7 @@
             for (i = 0; i < Math.ceil(Math.sqrt(n)); i++) {
                 for (j = 0; j < Math.ceil(Math.sqrt(n)); j++) {
                     ret_multiply.push([2, i, j, i*j]);
-                    ret_divide.push([3, i*j, j, i]);
+                    if (j > 0) ret_divide.push([3, i*j, j, i]);
                 }
             }
             return [ret_multiply, ret_divide];
