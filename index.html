@@ -322,6 +322,7 @@
                 } else {
                     index = COUNT-1;
                     update_index_tip();
+                    submit_quiz();
                 }
             };
 
@@ -417,6 +418,24 @@
 
             }
 
+            function submit_quiz() {
+                save_result();
+                var r = window.confirm("确定要提交答案吗？");
+                if (r) {
+                    for (i = 0; i < COUNT; i++) {
+                        var q = quiz[i];
+                        var aw = result[i];
+                        if (parseInt(aw) == q[3]) {
+                            RIGHT++;
+                        } else {
+                            q[3] = aw;
+                            errors.push(q);
+                        }
+                    }
+                    end_quiz();
+                }
+            }
+
             //buttons
             $("#btn-setting").bind("click", function() {
                 $("#settings").show();
@@ -439,21 +458,7 @@
             });
 
             $("#btn-submit").bind("click", function() {
-                save_result();
-                var r = window.confirm("确定要提交答案吗？");
-                if (r) {
-                    for (i = 0; i < COUNT; i++) {
-                        var q = quiz[i];
-                        var aw = result[i];
-                        if (parseInt(aw) == q[3]) {
-                            RIGHT++;
-                        } else {
-                            q[3] = aw;
-                            errors.push(q);
-                        }
-                    }
-                    end_quiz();
-                }
+                submit_quiz();
             });
 
             $("#next").bind("click", function() {
